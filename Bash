@@ -1,0 +1,14 @@
+# Ir a la carpeta descomprimida
+cd ~/Descargas/WakeUp   # o donde esté la carpeta WakeUp
+
+# Inicializa git
+git init
+git add .
+git commit -m "Primer commit - versión WakeUp bilingüe"
+
+# Conecta con el repo en GitHub (reemplaza TU_USUARIO)
+git remote add origin https://github.com/TU_USUARIO/WakeUp.git
+
+# Sube los archivos
+git branch -M main
+git push -u origin main
