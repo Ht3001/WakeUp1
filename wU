@@ -1,0 +1,11 @@
+---
+
+## **3️⃣ Abrir la app localmente**
+
+1. Asegúrate de tener **Node.js** y **React Native CLI** instalados.  
+2. Instala dependencias con `npm install` o `yarn install`.  
+3. Abre un emulador Android/iOS o conecta tu dispositivo.  
+4. Corre la app:  
+   ```bash
+   npx react-native run-android
+   npx react-native run-ios
