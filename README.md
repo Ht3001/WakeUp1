@@ -1,4 +1,25 @@
+## Monetización
 
+**Valor Humano** genera ingresos mediante:
+
+1. **Modelo Freemium:**  
+   - Acceso gratuito limitado.  
+   - Suscripción Premium con más preguntas, reportes avanzados y logros exclusivos.
+
+2. **Compras dentro de la app:**  
+   - Packs de preguntas premium por categoría.  
+   - Mini-cursos de desarrollo personal.
+
+3. **Publicidad opcional:**  
+   - Anuncios no intrusivos en la versión gratuita.  
+   - Eliminación de anuncios para suscriptores Premium.
+
+4. **Licencias para empresas o coaches:**  
+   - Uso de la app con empleados o clientes mediante licencias pagas.
+
+### Integración técnica
+- **Stripe:** Suscripciones y pagos dentro de la app.  
+- **Firebase:** Gestión de usuarios, suscripciones y contenido premium.
 
 # WakeUp - Bilingüe (ES/EN)
 
