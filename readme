@@ -1,0 +1,17 @@
+# Valor Humano App
+
+## Descripción
+Aplicación de desarrollo personal y espiritualidad que calcula el "Valor Personal" a través de la fórmula:
+**Valor Personal = (Conocimiento + Habilidad) x Actitud**, usando un juego de preguntas filosóficas.
+
+## Estructura del proyecto
+- **src/components/**: Componentes UI reutilizables
+- **src/screens/**: Pantallas de la app
+- **src/services/**: Algoritmos y lógica
+- **src/utils/**: Funciones auxiliares
+- **assets/**: Imágenes y recursos
+
+## Cómo instalar
+1. Clona el repositorio:
+```bash
+git clone https://github.com/tuUsuario/ValorHumanoApp.git
