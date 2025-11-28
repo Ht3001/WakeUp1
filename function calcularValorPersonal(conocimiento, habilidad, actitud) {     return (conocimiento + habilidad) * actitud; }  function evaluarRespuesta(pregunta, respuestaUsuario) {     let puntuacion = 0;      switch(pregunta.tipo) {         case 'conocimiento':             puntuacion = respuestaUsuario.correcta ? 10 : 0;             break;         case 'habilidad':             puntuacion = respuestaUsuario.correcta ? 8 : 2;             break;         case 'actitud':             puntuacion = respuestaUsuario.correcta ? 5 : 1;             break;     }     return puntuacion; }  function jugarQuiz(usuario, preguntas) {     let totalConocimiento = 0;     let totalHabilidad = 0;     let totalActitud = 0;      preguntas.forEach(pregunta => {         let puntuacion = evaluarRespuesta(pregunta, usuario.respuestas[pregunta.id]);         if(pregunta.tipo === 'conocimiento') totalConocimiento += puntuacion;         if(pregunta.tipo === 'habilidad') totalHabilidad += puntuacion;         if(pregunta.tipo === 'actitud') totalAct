@@ -1,0 +1,36 @@
+function calcularValorPersonal(conocimiento, habilidad, actitud) {
+    return (conocimiento + habilidad) * actitud;
+}
+
+function evaluarRespuesta(pregunta, respuestaUsuario) {
+    let puntuacion = 0;
+
+    switch(pregunta.tipo) {
+        case 'conocimiento':
+            puntuacion = respuestaUsuario.correcta ? 10 : 0;
+            break;
+        case 'habilidad':
+            puntuacion = respuestaUsuario.correcta ? 8 : 2;
+            break;
+        case 'actitud':
+            puntuacion = respuestaUsuario.correcta ? 5 : 1;
+            break;
+    }
+    return puntuacion;
+}
+
+function jugarQuiz(usuario, preguntas) {
+    let totalConocimiento = 0;
+    let totalHabilidad = 0;
+    let totalActitud = 0;
+
+    preguntas.forEach(pregunta => {
+        let puntuacion = evaluarRespuesta(pregunta, usuario.respuestas[pregunta.id]);
+        if(pregunta.tipo === 'conocimiento') totalConocimiento += puntuacion;
+        if(pregunta.tipo === 'habilidad') totalHabilidad += puntuacion;
+        if(pregunta.tipo === 'actitud') totalActitud += puntuacion;
+    });
+
+    let valorPersonal = calcularValorPersonal(totalConocimiento, totalHabilidad, totalActitud);
+    return valorPersonal;
+}
