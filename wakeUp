@@ -1,0 +1,15 @@
+import { useRouter } from 'next/router';
+
+export default function LanguageSwitcher() {
+  const router = useRouter();
+  const changeLanguage = (lang) => {
+    router.push(router.pathname, router.asPath, { locale: lang });
+  };
+
+  return (
+    <div>
+      <button onClick={() => changeLanguage('en')}>EN</button>
+      <button onClick={() => changeLanguage('es')}>ES</button>
+    </div>
+  );
+}
