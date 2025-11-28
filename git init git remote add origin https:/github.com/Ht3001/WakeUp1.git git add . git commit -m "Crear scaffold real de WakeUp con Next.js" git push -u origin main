@@ -1,0 +1,5 @@
+git init
+git remote add origin https://github.com/Ht3001/WakeUp1.git
+git add .
+git commit -m "Crear scaffold real de WakeUp con Next.js"
+git push -u origin main
