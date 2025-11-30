@@ -1,0 +1,7 @@
+const { success, agentActivity } = await linearClient.createAgentActivity({
+  agentSessionId: "...",
+  content: {
+    type: "...", 
+    ... // other payload fields - see below
+  },
+});
