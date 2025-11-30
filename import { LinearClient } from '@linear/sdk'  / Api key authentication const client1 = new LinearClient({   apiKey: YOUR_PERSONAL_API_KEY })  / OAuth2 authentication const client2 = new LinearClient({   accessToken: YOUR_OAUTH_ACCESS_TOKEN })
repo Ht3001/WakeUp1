@@ -1,0 +1,11 @@
+import { LinearClient } from '@linear/sdk'
+
+// Api key authentication
+const client1 = new LinearClient({
+  apiKey: YOUR_PERSONAL_API_KEY
+})
+
+// OAuth2 authentication
+const client2 = new LinearClient({
+  accessToken: YOUR_OAUTH_ACCESS_TOKEN
+})
