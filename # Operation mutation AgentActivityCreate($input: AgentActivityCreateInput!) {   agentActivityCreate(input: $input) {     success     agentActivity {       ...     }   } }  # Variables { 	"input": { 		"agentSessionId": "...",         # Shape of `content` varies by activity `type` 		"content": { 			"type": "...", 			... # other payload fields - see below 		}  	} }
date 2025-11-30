@@ -1,0 +1,21 @@
+# Operation
+mutation AgentActivityCreate($input: AgentActivityCreateInput!) {
+  agentActivityCreate(input: $input) {
+    success
+    agentActivity {
+      ...
+    }
+  }
+}
+
+# Variables
+{
+	"input": {
+		"agentSessionId": "...",
+        # Shape of `content` varies by activity `type`
+		"content": {
+			"type": "...",
+			... # other payload fields - see below
+		} 
+	}
+}
