@@ -1,0 +1,7 @@
+import { LinearClient, LinearFetch, User } from "@linear/sdk";
+
+const linearClient = new LinearClient({ apiKey });
+
+async function getCurrentUser(): LinearFetch<User> {
+  return linearClient.viewer;
+}
