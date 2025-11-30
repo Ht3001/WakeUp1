@@ -1,0 +1,8 @@
+# npm
+> npm install rollbar @rollbar/react
+
+# yarn
+> yarn add rollbar @rollbar/react
+
+# pnpm
+> pnpm add rollbar @rollbar/react
