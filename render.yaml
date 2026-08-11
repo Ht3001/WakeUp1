@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: wakeup-ht3001
+    env: node
+    plan: free
+    branch: main
+    rootDir: /
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: BOTPRESS_URL
+        value: "https://tu-botpress"
+      - key: BOT_ID
+        value: "wakeup"
+      - key: BOT_TOKEN
+        value: ""
+      - key: SUPPORT_EMAIL
+        value: "heidyteresa30@gmail.com"
+      - key: WEBHOOK_SECRET
+        value: ""
+      - key: NODE_ENV
+        value: "production"
