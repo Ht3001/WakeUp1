@@ -1,4 +1,5 @@
-name: Remove long filenames
+name: Propose removal of long filenames (create PR)
+
 on:
   workflow_dispatch:
     inputs:
@@ -8,40 +9,73 @@ on:
         default: '140'
 
 jobs:
-  remove:
+  find_and_create_pr:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
 
-      - name: Show current branch
-        run: git rev-parse --abbrev-ref HEAD
-
-      - name: Find long filenames
+      - name: Set variables
         run: |
           THRESHOLD="${{ github.event.inputs.threshold }}"
           if [ -z "$THRESHOLD" ]; then THRESHOLD=140; fi
+          echo "THRESHOLD=$THRESHOLD" >> $GITHUB_ENV
+          BRANCH_NAME="fix/remove-long-filenames-$(date +%s)"
+          echo "BRANCH=$BRANCH_NAME" >> $GITHUB_ENV
           echo "Using threshold: $THRESHOLD"
+
+      - name: Find long filenames
+        run: |
           git ls-files -z | tr '\0' '\n' | awk -v t="$THRESHOLD" 'length($0) > t' > long-files.txt || true
-          echo "Long files (if any):"
+          echo "--- Long files (if any) ---"
           cat long-files.txt || true
 
-      - name: Remove long files if any
+      - name: Exit if no long files
         run: |
-          if [ -s long-files.txt ]; then
-            echo "Removing files listed in long-files.txt"
-            while IFS= read -r f; do
-              echo "Removing: $f"
-              git rm -- "$f" || echo "Failed to git rm $f"
-            done < long-files.txt
-            git commit -m "Remove files with excessively long filenames to fix Render unpack error" || echo "No changes to commit"
-            git push origin HEAD:main
-            echo "Pushed deletions to main"
-          else
-            echo "No files to remove"
+          if [ ! -s long-files.txt ]; then
+            echo "No files exceeding threshold ($THRESHOLD) found. Nothing to do.";
+            exit 0;
           fi
+
+      - name: Create branch and remove files
+        run: |
+          echo "Creating branch $BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          while IFS= read -r f; do
+            echo "Removing: $f"
+            git rm -- "$f" || echo "Failed to git rm $f"
+          done < long-files.txt
+          git commit -m "Remove files with excessively long filenames to fix Render unpack error" || echo "No changes to commit"
+          git push --set-upstream origin "$BRANCH"
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const files = fs.readFileSync('long-files.txt','utf8');
+            const threshold = process.env.THRESHOLD || '140';
+            const branch = process.env.BRANCH;
+            const body = `This PR proposes removing files whose paths exceed ${threshold} characters.\n\nFiles:\n\n\
+` + '```\n' + files + '\n```\n\nPlease review before merging.`;
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Propose removal of files with excessively long filenames',
+              head: branch,
+              base: 'main',
+              body: body
+            });
+            core.setOutput('pr_url', pr.html_url);
+
+      - name: Show PR URL
+        run: |
+          echo "PR created: ${{ steps.github-script.outputs.pr_url }}"
