@@ -1,0 +1,47 @@
+name: Remove long filenames
+on:
+  workflow_dispatch:
+    inputs:
+      threshold:
+        description: 'Filename length threshold'
+        required: false
+        default: '140'
+
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Show current branch
+        run: git rev-parse --abbrev-ref HEAD
+
+      - name: Find long filenames
+        run: |
+          THRESHOLD="${{ github.event.inputs.threshold }}"
+          if [ -z "$THRESHOLD" ]; then THRESHOLD=140; fi
+          echo "Using threshold: $THRESHOLD"
+          git ls-files -z | tr '\0' '\n' | awk -v t="$THRESHOLD" 'length($0) > t' > long-files.txt || true
+          echo "Long files (if any):"
+          cat long-files.txt || true
+
+      - name: Remove long files if any
+        run: |
+          if [ -s long-files.txt ]; then
+            echo "Removing files listed in long-files.txt"
+            while IFS= read -r f; do
+              echo "Removing: $f"
+              git rm -- "$f" || echo "Failed to git rm $f"
+            done < long-files.txt
+            git commit -m "Remove files with excessively long filenames to fix Render unpack error" || echo "No changes to commit"
+            git push origin HEAD:main
+            echo "Pushed deletions to main"
+          else
+            echo "No files to remove"
+          fi
