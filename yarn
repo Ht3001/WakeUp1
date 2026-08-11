@@ -1,0 +1,39 @@
+services:
+
+• type: webname: wakeup-ht3001env: nodeplan: freebranch: mainrootDir: /buildCommand: npm installstartCommand: npm starthealthCheckPath: /autoDeploy: trueenvVars:
+
+• key: BOTPRESS_URLvalue: “https://tu-botpress”
+
+• key: BOT_IDvalue: “wakeup”
+
+• key: BOT_TOKENvalue: “”
+
+• key: SUPPORT_EMAILvalue: “heidyteresa30@gmail.com”
+
+• key: WEBHOOK_SECRETvalue: “”
+
+• key: NODE_ENVvalue: “production”
+
+Instrucciones mínimas para usarlo
+
+1. Guarda el archivo render.yaml en la raíz del repo y haz commit/push:git add render.yamlgit commit -m “Add render.yaml for Render deployment”git push origin main
+
+2. En Render:
+
+• New → Web Service → From Repo → selecciona WakeUp1/ht3001.
+
+• Render detectará render.yaml y usará esa configuración.
+
+• Crea el servicio.
+
+3. Configura los secretos (recomendado inmediatamente después de crear el service):
+
+• Ve a tu servicio → Environment → añade BOT_TOKEN y WEBHOOK_SECRET con sus valores (no los dejes en el repo).
+
+• Si prefieres, añade también BOTPRESS_URL y otros secretos aquí en vez de en render.yaml.
+
+4. Espera a que Render haga build/deploy y revisa Logs en el panel del servicio.
+
+Pruebas
+
+• Obtén la URL pública del servicio y prueba:curl -i -X POST “https://.onrender.com/webhook/instagram” -H “Content-Type: application/json” -H “X-Wakeup-Secret: <valor_de_WEBHOOK_SECRET>” -d ‘{“message”:“test”}’
