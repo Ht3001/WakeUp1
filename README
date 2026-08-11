@@ -1,0 +1,23 @@
+WakeUp-bot - servidor webhook mínimo
+
+Instrucciones:
+1. Crear un archivo .env en la raíz con al menos:
+   BOTPRESS_URL=https://tu-botpress
+   BOT_ID=wakeup
+   BOT_TOKEN=TOKEN_AQUI
+   SUPPORT_EMAIL=heidyteresa30@gmail.com
+   WEBHOOK_SECRET=8f3b9c2d7a4e1f6b9c0d3a7e5b2c1f4a
+   PORT=4000
+
+2. Instalar dependencias:
+   npm install
+
+3. Ejecutar:
+   npm start
+   (o) node index.js
+
+4. Probar endpoint:
+   curl -i -X POST "http://localhost:4000/webhook/instagram" \
+     -H "Content-Type: application/json" \
+     -H "X-Wakeup-Secret: 8f3b9c2d7a4e1f6b9c0d3a7e5b2c1f4a" \
+     -d '{"from":"test_user_123","sender_name":"Heidy","message":"¿Qué es WakeUp?","attachments":null,"platform":"instagram"}'
