@@ -4,19 +4,38 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  manual-run:
-    name: Manual run (ht3001)
+  build:
+    name: Install and smoke-test server
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Print info
-        run: |
-          echo "Workflow triggered manually: $GITHUB_WORKFLOW"
-          echo "Repository: $GITHUB_REPOSITORY"
-          echo "Ref: $GITHUB_REF"
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-      - name: Example build step
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund || npm install
+
+      - name: Start server (background) and wait for it
         run: |
-          echo "Add your real steps here."
+          npm run start &
+          # Wait for server to be available (max ~10s)
+          for i in {1..10}; do
+            if curl -sSf http://localhost:4000/ >/dev/null 2>&1; then
+              echo "Server is up"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Smoke test (GET /)
+        run: |
+          curl -v http://localhost:4000/
+
+      - name: Stop server
+        run: |
+          pkill -f "node index.js" || true
