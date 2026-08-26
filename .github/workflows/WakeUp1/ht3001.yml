@@ -21,8 +21,13 @@ jobs:
         run: npm ci --prefer-offline --no-audit --no-fund || npm install
 
       - name: Start server (background) and wait for it
+        env:
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          npm run start &
+          # Export the secret into the environment so index.js can read it
+          export WEBHOOK_SECRET="$WEBHOOK_SECRET"
+          WEBHOOK_SECRET="$WEBHOOK_SECRET" npm run start &
+
           # Wait for server to be available (max ~20s)
           for i in {1..20}; do
             if curl -sSf http://localhost:4000/ >/dev/null 2>&1; then
